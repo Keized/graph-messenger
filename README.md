@@ -10,10 +10,14 @@
 ```prisma db push```
 
 ## Start the server
- ```nodemon```
+ ```npm run server-dev```
 
 ## Start the client
-```nodemon```
+```npm run ui-dev```
+
+
+## Add migration
+```npm run ui-dev```
 
 # Tools
 

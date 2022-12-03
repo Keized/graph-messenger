@@ -9,7 +9,6 @@ export const typeDef = `
         email: String!
         id: Int!
         password: String!
-        messages: [Message]
     }
 `;
 

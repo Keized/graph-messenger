@@ -8,7 +8,11 @@ module.exports = {
       colors: {
         primary: 'var(--primary)',
         seconday: 'var(--seconday)',
-        ternary: 'var(--ternary)'
+        ternary: 'var(--ternary)',
+        'primary-bg' : 'var(--background-primary)',
+        'secondary-bg' : 'var(--background-secondary)',
+        'ternary-bg' : 'var(--background-ternary)',
+        'input-bg' : 'var(--background-input)',
       },
       flexGrow: {
         '2': 2,

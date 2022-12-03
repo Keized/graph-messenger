@@ -4,12 +4,12 @@ import Login from "./Login";
 import Room from "./Room";
 
 export default function Main() {
-    const { user } = useContext(AuthContext) as AuthContextType;
+    const { guest } = useContext(AuthContext) as AuthContextType;
 
     return (
         <div>
-            { user && <Room /> }
-            { !user && <Login /> }
+            { guest && <Room /> }
+            { !guest && <Login /> }
         </div>
     );
 }

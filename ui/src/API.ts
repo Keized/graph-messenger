@@ -1,10 +1,9 @@
 import { gql, ApolloClient, InMemoryCache } from "@apollo/client";
 
-export const LOGIN_MUTATION  = gql`
-    mutation login($email: String!, $password: String!) {
-        login(email: $email, password: $password) {
-            token
-            user {
+export const GUEST_LOGIN_MUTATION  = gql`
+    mutation guestLogin($name: String!) {
+        guest_login(name: $name) {
+            guest {
                 id
             }
         }
@@ -12,8 +11,8 @@ export const LOGIN_MUTATION  = gql`
 `;
 
 export const MESSAGE_MUTATION  = gql`
-    mutation CreateMessage($content: String!) {
-        createMessage(content: $content) {
+    mutation CreateMessage($content: String!, $guestId: ID!) {
+        createMessage(content: $content, guestId: $guestId) {
             id
             createdAt
             content
@@ -28,7 +27,7 @@ export const ALL_MESSAGES = gql`
     query AllMessages {
         allMessages {
             author {
-                email
+                name
                 id
             }
             createdAt

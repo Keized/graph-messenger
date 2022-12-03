@@ -8,10 +8,15 @@
   --secondary: #242424;
   --ternary: #3B3B3B;
 
+  --background-primary: #292F3F;
+  --background-secondary: #272A35;
+  --background-ternary: #373E4E;
+  --background-input: #00000025;
+
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+
+  color: white;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;

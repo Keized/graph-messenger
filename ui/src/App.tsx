@@ -15,9 +15,9 @@ function App() {
   return (
       <ApolloProvider client={client}>
       <AuthProvider>
-        <div className="App">
+        <main className="App bg-primary-bg">
             <Main />
-        </div>
+        </main>
       </AuthProvider>
       </ApolloProvider>
   )

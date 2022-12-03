@@ -18,13 +18,13 @@ export const context = ({req}: { req: Request }): Context => {
         return { prisma };
     }
 
-    if (!req.headers.authorization) {
-        throw new Error('Authorization headers not found');
-    }
+    //if (!req.headers.authorization) {
+    //    throw new Error('Authorization headers not found');
+    //}
 
-    const token = decodeAuthorizationHeader(req.headers.authorization);
+    //const token = decodeAuthorizationHeader(req.headers.authorization);
     return {
         prisma,
-        userId: token?.userId,
+    //    userId: token?.userId,
     };
 }

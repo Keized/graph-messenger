@@ -1,6 +1,7 @@
 import { merge } from 'lodash';
 import { typeDef as Message, resolvers as messageResolvers } from './message';
 import { typeDef as User, resolvers as userResolvers } from './user';
+import { typeDef as Guest, resolvers as guestResolvers } from './guest';
 import { typeDef as Auth, resolvers as authResolvers } from './auth';
 
 const Scalar = `
@@ -19,5 +20,5 @@ const Query = `
     }
 `;
 
-export const typeDefs = [ Scalar, Query, Mutation, User, Message, Auth ];
-export const resolvers = merge(messageResolvers, userResolvers, authResolvers);
+export const typeDefs = [ Scalar, Query, Mutation, User, Message, Guest, Auth ];
+export const resolvers = merge(messageResolvers, userResolvers, guestResolvers, authResolvers );

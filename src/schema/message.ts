@@ -2,7 +2,7 @@ import {Context} from "../context";
 
 export const typeDef = `
     type Message {
-        author: User!
+        author: Guest!
         createdAt: DateTime!
         id: Int!
         content: String!
@@ -17,7 +17,7 @@ export const typeDef = `
     }
     
     extend type Mutation {
-        createMessage(content: String!): Message!
+        createMessage(content: String!, guestId: ID!): Message!
     }
 `
 
@@ -28,29 +28,27 @@ export const resolvers = {
         }
     },
     Mutation: {
-        createMessage: (
+        createMessage: async (
             _parent: undefined,
-            args: { content: string },
+            args: { content: string, guestId: string },
             context: Context
         ) => {
-            const {userId, prisma} = context;
-            const {content} = args;
+            const { prisma } = context;
+            const { content, guestId } = args;
 
-            if (!userId) throw new Error("User must be authentified");
-
-            const user = prisma.user.findUnique({
+            const guest = await prisma.guest.findUnique({
                 where: {
-                    id: userId
+                    id: parseInt(guestId)
                 }
             });
 
-            if (!user) throw new Error("User not found");
+            if (!guest) throw new Error("Guest not found");
 
-            return prisma.message.create({
+            return await prisma.message.create({
                 data: {
                     content,
                     author: {
-                        connect: {id: userId}
+                        connect: {id: parseInt(guestId)}
                     }
                 }
             });

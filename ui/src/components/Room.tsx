@@ -1,16 +1,19 @@
 import {MutableRefObject, useContext, useEffect, useRef, useState } from "react";
 import { AuthContext, AuthContextType, Message } from "../contexts/AuthProvider";
+import MessageRow from "./MessageRow";
 
 export default function Room() {
     const ref = useRef<HTMLDivElement>() as MutableRefObject<HTMLDivElement>;
-    const  { sendMessage, messages, user } = useContext(AuthContext) as AuthContextType;
+    const  { sendMessage, messages, guest } = useContext(AuthContext) as AuthContextType;
     const [message, setMesage] = useState<string>('');
 
     const onClick = async () => {
         if (message.trim() === '') return;
 
-        await sendMessage(message);
-        setMesage('');
+        if (guest?.id) {
+            await sendMessage(message, guest.id);
+            setMesage('');
+        }
     };
 
     useEffect(() => {
@@ -18,24 +21,22 @@ export default function Room() {
     }, [messages])
 
     return <div className="">
-        <div className="room__container flex flex-col max-w-[900px] h-screen mx-auto shadow-lg">
-            <div className="chat bg-secondary grow-[3] overflow-auto p-4 " >
-                { messages && messages.map((message: Message) => <MessageRow content={message.content} authorId={message.author.id} isMe={ parseInt(message.author.id) === user?.id } key={message.id} />) }
+        <div className="flex flex-col max-w-[900px] p-3 h-screen mx-auto shadow-lg">
+            <div className="chat bg-secondary grow-[1] overflow-auto p-4 " >
+                { messages && messages.map((message: Message) => <MessageRow content={message.content} author={message.author.name} isMe={ message.author.id == guest?.id } key={message.id} />) }
                 <div ref={ref}/>
             </div>
-            <div className="editor bg-secondary grow-[1]">
-                <div className="flex h-full">
-                    <textarea onChange={({target: {value}}) => { setMesage(value)}} value={message} className='border-0 flex-1 h-full p-4 focus:outline-0'></textarea>
-                    <button className="w-[200px] bg-primary font-bold" onClick={onClick}>Send</button>
+            <div className="editor bg-secondary">
+                <div className="flex gap-10 items-end">
+                    <textarea 
+                        rows={5}
+                        onChange={({target: {value}}) => { setMesage(value)}}
+                        value={message} 
+                        className='border-0 flex-1 p-3 h-full p-4 focus:outline-0 rounded-2xl bg-input-bg'
+                    ></textarea>
+                    <button className="h-[60px] w-[60px] bg-primary p-3 font-bold rounded-2xl " onClick={onClick}>Send</button>
                 </div>
             </div>
         </div>
-    </div>
-}
-
-function MessageRow({content, authorId, isMe}: any) {
-    return <div className={`message__row mb-8 ${isMe ? "right" : "left"}`}>
-        <small>{authorId}: </small>
-        <strong>{content}</strong>
     </div>
 }
