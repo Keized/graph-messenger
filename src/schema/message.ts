@@ -1,5 +1,7 @@
 import {Context} from "../context";
+import { PubSub } from 'graphql-subscriptions';
 
+const pubsub = new PubSub();
 export const typeDef = `
     type Message {
         author: Guest!
@@ -9,7 +11,7 @@ export const typeDef = `
     }
     
     type Subscription {
-        messageAdded(messageId: ID!): Message
+        messageAdded: Message!
     }
     
     extend type Query {
@@ -36,6 +38,8 @@ export const resolvers = {
             const { prisma } = context;
             const { content, guestId } = args;
 
+            console.log(context);
+
             const guest = await prisma.guest.findUnique({
                 where: {
                     id: parseInt(guestId)
@@ -44,7 +48,7 @@ export const resolvers = {
 
             if (!guest) throw new Error("Guest not found");
 
-            return await prisma.message.create({
+            const message = await prisma.message.create({
                 data: {
                     content,
                     author: {
@@ -52,7 +56,19 @@ export const resolvers = {
                     }
                 }
             });
+
+            pubsub.publish("messageAdded", {
+                messageAdded: { ...message }
+              });
+  
+            return message;
+
         },
+    },
+    Subscription: {
+        messageAdded: {
+            subscribe: () => pubsub.asyncIterator(["bookTitleChanged"])
+        }
     },
     Message: {
         author: (parent: { id: number }, _args: undefined, context: Context) => {

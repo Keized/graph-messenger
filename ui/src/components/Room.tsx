@@ -1,4 +1,6 @@
+import { useSubscription } from "@apollo/client";
 import {MutableRefObject, useContext, useEffect, useRef, useState } from "react";
+import { MESSAGES_SUBSCRIPTION } from "../API";
 import { AuthContext, AuthContextType, Message } from "../contexts/AuthProvider";
 import MessageRow from "./MessageRow";
 
@@ -6,6 +8,14 @@ export default function Room() {
     const ref = useRef<HTMLDivElement>() as MutableRefObject<HTMLDivElement>;
     const  { sendMessage, messages, guest } = useContext(AuthContext) as AuthContextType;
     const [message, setMesage] = useState<string>('');
+
+    
+
+    const { data, loading } = useSubscription(
+        MESSAGES_SUBSCRIPTION
+      );
+
+      console.log(data);
 
     const onClick = async () => {
         if (message.trim() === '') return;

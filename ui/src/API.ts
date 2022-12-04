@@ -1,4 +1,4 @@
-import { gql, ApolloClient, InMemoryCache } from "@apollo/client";
+import { gql } from "@apollo/client";
 
 export const GUEST_LOGIN_MUTATION  = gql`
     mutation guestLogin($name: String!) {
@@ -33,6 +33,14 @@ export const ALL_MESSAGES = gql`
             createdAt
             id
             content
+        }
+    }
+`;
+
+export const MESSAGES_SUBSCRIPTION = gql`
+    subscription MessageAdded {
+        messageAdded {
+            id
         }
     }
 `;
