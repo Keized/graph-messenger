@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { createContext, Dispatch, ReactElement, SetStateAction, useEffect, useMemo, useState } from "react";
-import {ALL_MESSAGES, GUEST_LOGIN_MUTATION, MESSAGE_MUTATION } from "../API";
+import {ALL_MESSAGES, GUEST_LOGIN_MUTATION, MESSAGES_SUBSCRIPTION, MESSAGE_MUTATION } from "../API";
+import { useSubscription } from "@apollo/client";
 
 export type User = {
     id: number;
@@ -52,25 +53,37 @@ export type AllMessagesResponse = {
 export const AuthContext = createContext<AuthContextType | null>(null);
 
 export default function AuthProvider({ children }: { children: ReactElement | ReactElement[] }) {
-
+    const { data: subData, loading } = useSubscription(MESSAGES_SUBSCRIPTION);
+    const { data } = useQuery<{allMessages: Message[]}>(ALL_MESSAGES);
     const [guest, setGuest] = useState<Guest | null>(null);
 
     const [postLoginCheck] = useMutation<LoginCheckResponse, {name: string}>(GUEST_LOGIN_MUTATION);
     const [postMessage] = useMutation<SendMessageResponse, {content: string, guestId: number}>(MESSAGE_MUTATION);
-    const { data, refetch } = useQuery<{allMessages: Message[]}>(ALL_MESSAGES);
 
     const sendMessage = async (message: string, guestId: number) => {
         await postMessage({ variables: { content: message, guestId } });
-        refetch();
     }
 
     const login = async (name: string) => {
         const { data } = await postLoginCheck({variables: {name}});
-        console.log(data);
         setGuest(data?.guest_login?.guest ?? null);
     };
 
-    const value = useMemo(() => ({ guest, login, sendMessage, messages: data?.allMessages || [] }), [guest, data]);
+    const [ messages, setMessages] = useState<Message[]>([]);
+
+    useEffect(() => {
+        if (data?.allMessages) {
+            setMessages([...data.allMessages]);
+        }
+    }, [data])
+
+    useEffect(() => {
+        if (subData?.messageAdded) {
+            setMessages([...messages, subData.messageAdded]);
+        }
+    }, [subData])
+
+    const value = useMemo(() => ({ guest, login, sendMessage, messages }), [guest, messages]);
 
     return (
         <AuthContext.Provider value={ value }>

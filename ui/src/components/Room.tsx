@@ -9,14 +9,6 @@ export default function Room() {
     const  { sendMessage, messages, guest } = useContext(AuthContext) as AuthContextType;
     const [message, setMesage] = useState<string>('');
 
-    
-
-    const { data, loading } = useSubscription(
-        MESSAGES_SUBSCRIPTION
-      );
-
-      console.log(data);
-
     const onClick = async () => {
         if (message.trim() === '') return;
 

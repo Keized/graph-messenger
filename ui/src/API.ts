@@ -38,9 +38,15 @@ export const ALL_MESSAGES = gql`
 `;
 
 export const MESSAGES_SUBSCRIPTION = gql`
-    subscription MessageAdded {
+    subscription messageAdded {
         messageAdded {
+            author {
+                name
+                id
+            }
+            createdAt
             id
+            content
         }
     }
 `;

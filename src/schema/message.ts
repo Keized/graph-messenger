@@ -38,8 +38,6 @@ export const resolvers = {
             const { prisma } = context;
             const { content, guestId } = args;
 
-            console.log(context);
-
             const guest = await prisma.guest.findUnique({
                 where: {
                     id: parseInt(guestId)
@@ -67,7 +65,7 @@ export const resolvers = {
     },
     Subscription: {
         messageAdded: {
-            subscribe: () => pubsub.asyncIterator(["bookTitleChanged"])
+            subscribe: () => pubsub.asyncIterator(["messageAdded"])
         }
     },
     Message: {
