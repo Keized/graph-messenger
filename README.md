@@ -16,9 +16,6 @@
 ```npm run ui-dev```
 
 
-## Add migration
-```npm run ui-dev```
-
 # Tools
 
 ## Open prisma studio to visualize the database

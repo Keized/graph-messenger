@@ -1,6 +1,4 @@
-import { useSubscription } from "@apollo/client";
 import {MutableRefObject, useContext, useEffect, useRef, useState } from "react";
-import { MESSAGES_SUBSCRIPTION } from "../API";
 import { AuthContext, AuthContextType, Message } from "../contexts/AuthProvider";
 import MessageRow from "./MessageRow";
 
